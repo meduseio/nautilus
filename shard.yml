@@ -1,0 +1,21 @@
+name: nautilus
+version: 0.1.0
+
+authors:
+  - Ferhat Ziba <ferhat@meduse.io>
+
+dependencies:
+  sodium:
+    github: didactic-drunk/sodium.cr
+  router:
+    github: tbrand/router.cr
+  schedule:
+    github: hugoabonizio/schedule.cr
+targets:
+  nautilus:
+    main: src/nautilus.cr
+
+
+crystal: 0.35.1
+
+license: MIT
