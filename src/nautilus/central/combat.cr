@@ -1,7 +1,11 @@
 module Nautilus
   module Central
     class Combat
-      def initialize
+
+      property config : Nautilus::Configuration::Base
+
+      def initialize(config : Nautilus::Configuration::Base)
+        @config = config
         @channel = Channel(Nautilus::Central::Message).new
       end
 
@@ -18,6 +22,9 @@ module Nautilus
       end
 
       def run
+        spawn do
+          Nautilus::Network::Node.new(channel, config).run(config.nodes)
+        end
         loop do
           message = channel.receive
           handle(message)

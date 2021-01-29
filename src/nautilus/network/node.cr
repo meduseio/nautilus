@@ -8,17 +8,13 @@ module Nautilus
       include Router
 
       property information : NodeInformation
-      property key : Sodium::CryptoBox::SecretKey
-      property signing : Sodium::Sign::SecretKey
       property channel : Channel(Nautilus::Central::Message)
-      property port : UInt32
+      property config : Nautilus::Configuration::Base
 
-      def initialize(channel : Channel(Nautilus::Central::Message), port : UInt32)
-        @signing = Sodium::Sign::SecretKey.new
-        @key = Sodium::CryptoBox::SecretKey.new
+      def initialize(channel : Channel(Nautilus::Central::Message), config : Nautilus::Configuration::Base)
         @nodes = Hash(UInt32, NodeInformation).new
-        @port = port
-        @information = NodeInformation.new(Nautilus::Network::FORK, Nautilus::Network::VERSION, key.public_key.to_slice, signing.public_key.to_slice, @signing, port)
+        @config = config
+        @information = NodeInformation.new(config)
         @channel = channel
         message = Nautilus::Central::Message.new(Nautilus::Central::Message::LOG, "Node: #{id.to_s} started")
         channel.send(message)
@@ -35,12 +31,12 @@ module Nautilus
 
       def run(nodes : Array(String))
         node_table = NodeTable.new(nodes, information.id)
-        protocol = UDPProtocol.new(information, node_table, key, signing)
-        message = Nautilus::Central::Message.new(Nautilus::Central::Message::LOG, "Run Nodes on port: #{port}")
+        protocol = UDPProtocol.new(information, node_table, config)
+        message = Nautilus::Central::Message.new(Nautilus::Central::Message::LOG, "Run Nodes on port: #{config.port}")
         channel.send(message)
         udp_client_messages = Channel(UDPMessage).new
         udp_server = UDPSocket.new
-        udp_server.bind "0.0.0.0", port.to_i
+        udp_server.bind "0.0.0.0", config.port
         draw_routes
 
         Schedule.every(3.seconds) do
@@ -102,8 +98,7 @@ module Nautilus
         end
 
         server = HTTP::Server.new(route_handler)
-        server.bind_tcp port.to_i
-
+        server.bind_tcp config.port.to_i
         server.listen
       end
 

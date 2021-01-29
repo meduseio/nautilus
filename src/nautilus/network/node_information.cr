@@ -5,22 +5,23 @@ module Nautilus
     class NodeInformation
       property version : UInt8
       property network_fork : UInt8
-      property public_signature : Bytes
-      property public_key : Bytes
       property ip : Socket::IPAddress
       property signature : Bytes
       property id : String
-      property port : UInt32
+      property port : Int32
+      property public_signature : Bytes
+      property public_key : Bytes
 
-      def initialize(network_fork : UInt8, version : UInt8, public_key_bytes : Bytes, public_signature_bytes : Bytes, signing : Sodium::Sign::SecretKey, port : UInt32)
-        @version = version
-        @network_fork = network_fork
-        @public_signature = public_signature_bytes
-        @public_key = public_key_bytes
-        @ip = Socket::IPAddress.new("127.0.0.1", port.to_i)
+      def initialize(config : Nautilus::Configuration::Base)
+        @version = 1.to_u8
+        @network_fork = 1.to_u8
+        manager = Nautilus::Cryptography::Manager.new(config)
+        @public_signature = manager.public_signature.to_slice
+        @public_key = manager.public_key.to_slice
+        @ip = Socket::IPAddress.new("127.0.0.1", config.port)
         @id = Digest::SHA1.hexdigest(Digest::SHA1.hexdigest(@public_key.to_slice) + Digest::SHA1.hexdigest(@public_signature.to_slice))
-        @port = port
-        @signature = signing.sign_detached(@id).to_slice
+        @port = config.port
+        @signature = manager.private_signature.sign_detached(@id).to_slice
       end
 
       def initialize(bytes : Bytes, ip : Socket::IPAddress)
@@ -33,8 +34,8 @@ module Nautilus
         @public_signature = public_signature_string.to_slice
         signature_bytes, remaining_bytes = Nautilus::Utils::BytesToolBox.read_string_from_bytes(remaining_bytes)
         @signature = signature_bytes.to_slice
-        @port = Nautilus::Utils::BytesToolBox.convert_bytes_to_uint32(remaining_bytes).to_u
-        @ip = Socket::IPAddress.new(ip.address, @port.to_i)
+        @port = Nautilus::Utils::BytesToolBox.convert_bytes_to_uint32(remaining_bytes).to_i
+        @ip = Socket::IPAddress.new(ip.address, @port)
         @id = Digest::SHA1.hexdigest(Digest::SHA1.hexdigest(@public_key.to_slice) + Digest::SHA1.hexdigest(@public_signature.to_slice))
       end
 
@@ -45,7 +46,7 @@ module Nautilus
         public_key_bytes = Nautilus::Utils::BytesToolBox.build_unknown_message_length_bytes(String.new(slice: public_key))
         public_signature_bytes = Nautilus::Utils::BytesToolBox.build_unknown_message_length_bytes(String.new(slice: public_signature))
         signature_bytes = Nautilus::Utils::BytesToolBox.build_unknown_message_length_bytes(String.new(slice: signature))
-        port_bytes = Nautilus::Utils::BytesToolBox.convert_uint32_to_bytes(@port)
+        port_bytes = Nautilus::Utils::BytesToolBox.convert_uint32_to_bytes(@port.to_u)
         pub_keys = concat(public_key_bytes, public_signature_bytes)
         payload = concat(concat(pub_keys, signature_bytes), port_bytes)
         String.new(slice: concat(head, payload))

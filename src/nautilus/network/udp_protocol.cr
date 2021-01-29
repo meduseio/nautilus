@@ -15,11 +15,12 @@ module Nautilus
       property key : Sodium::CryptoBox::SecretKey
       property signing : Sodium::Sign::SecretKey
 
-      def initialize(information : NodeInformation, table : NodeTable, key : Sodium::CryptoBox::SecretKey, signing : Sodium::Sign::SecretKey)
+      def initialize(information : NodeInformation, table : NodeTable, config : Nautilus::Configuration::Base)
         @information = information
         @table = table
-        @key = key
-        @signing = signing
+        manager = Nautilus::Cryptography::Manager.new(config)
+        @key = manager.private_key
+        @signing = manager.private_signature
       end
 
       def handle_message(receive : String, address : Socket::IPAddress)
@@ -30,11 +31,19 @@ module Nautilus
         begin
           if (PING <=> converted) == 0
             m_information = NodeInformation.new(message + 2, address)
-            table.add_host(m_information)
+            if m_information.valid_node?
+              table.add_host(m_information)
+            else
+              puts "Node Invalid #{m_information.id}"
+            end
             udp_messages.push(build_pong_message(m_information.ip))
           elsif (PONG <=> converted) == 0
             m_information = NodeInformation.new(message + 2, address)
-            table.add_host(m_information)
+            if m_information.valid_node?
+              table.add_host(m_information)
+            else
+              puts "Node Invalid #{m_information.id}"
+            end
           elsif (NEIGHBOURS <=> converted) == 0
             valid, remote_id = neighbours_message(message + 2)
             if valid

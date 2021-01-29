@@ -12,7 +12,7 @@ require "socket"
 require "schedule"
 require "system/user"
 require "file_utils"
-
+require "levenshtein"
 
 module Nautilus
   VERSION = "0.1.0"
@@ -32,21 +32,10 @@ end
 # puts address.to_address
 #
 # puts [1, 5, 6].shuffle(Random::ISAAC.new(seeds: [1]))
-network = "main"
-genesis = false
-OptionParser.parse do |parser|
-  parser.on("-n NETWORK", "--network=NETWORK", "Select the network") { |_network| network = _network }
-  parser.on("-g", "--enable_genesis", "This node will be the genesis validattor") { genesis = true }
-end
 
+conf = Nautilus::Configuration::Base.load
 
-if network == "development"
-  conf = Nautilus::Network::Configuration::Development.new(genesis)
-else
-  conf = Nautilus::Network::Configuration::Main.new(genesis)
-end
-
-combat = Nautilus::Central::Combat.new
+combat = Nautilus::Central::Combat.new(conf)
 # spawn do
 #   Nautilus::Network::Node.new(combat.channel, port).run(nodes)
 # end
