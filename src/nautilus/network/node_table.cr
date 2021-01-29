@@ -1,11 +1,9 @@
 module Nautilus
   module Network
     class NodeTable
-
       property unresovled_nodes : Array(String)
       property distance_helper : Distance
       property table : Hash(UInt32, NodeInformation)
-
 
       def initialize(nodes : Array(String), id : String)
         @unresovled_nodes = nodes
@@ -71,7 +69,6 @@ module Nautilus
           puts information.id
         end
       end
-
     end
   end
 end

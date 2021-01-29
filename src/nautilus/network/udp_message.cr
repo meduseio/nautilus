@@ -23,7 +23,6 @@ module Nautilus
       def to_s
         "SENDING MESSAGE #{action} FOR #{id} TO #{target} - #{message.to_slice}"
       end
-
     end
   end
 end

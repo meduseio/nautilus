@@ -1,14 +1,13 @@
 module Nautilus
   module Utils
     class BytesToolBox
-
       def self.concat(a : Bytes, b : Bytes)
         result = IO::Memory.new a.bytesize + b.bytesize
         a.each do |v|
-            result.write_bytes UInt8.new v
+          result.write_bytes UInt8.new v
         end
         b.each do |v|
-            result.write_bytes UInt8.new v
+          result.write_bytes UInt8.new v
         end
         result.to_slice
       end
@@ -19,6 +18,20 @@ module Nautilus
           slice[index] = UInt8.new(v)
         end
         slice
+      end
+
+      def self.convert_hex_string_to_bytes(input : String) : Bytes
+        length = input.size
+        slice_length = (input.size / 2).to_i
+        slice_pos : UInt8 = 0
+        start = 0
+        a = Slice(UInt8).new(slice_length)
+        while start < length
+          a[slice_pos] = input[start, 2].to_u8(16)
+          start += 2
+          slice_pos += 1
+        end
+        a
       end
 
       def self.build_unknown_message_length_bytes(message)
@@ -44,10 +57,9 @@ module Nautilus
 
       def self.read_string_from_bytes(bytes : Bytes) : Tuple(String, Bytes)
         message_length = Nautilus::Utils::BytesToolBox.convert_bytes_to_uint32(bytes[0, 4])
-        message_bytes = bytes+4
-        { String.new(slice: message_bytes[0, message_length]), message_bytes+message_length }
+        message_bytes = bytes + 4
+        {String.new(slice: message_bytes[0, message_length]), message_bytes + message_length}
       end
-
     end
   end
 end

@@ -1,13 +1,13 @@
 module Nautilus
   module Network
     class UDPProtocol
-      PING = [1,1]
-      PONG = [1,2]
-      NEIGHBOURS = [1,3]
-      NEIGHBOUR = [1,4]
-      ARE_YOU_ALIVE = [1,6]
-      I_AM_ALIVE = [1,7]
-      UKNOWN = [10, 10]
+      PING          = [1, 1]
+      PONG          = [1, 2]
+      NEIGHBOURS    = [1, 3]
+      NEIGHBOUR     = [1, 4]
+      ARE_YOU_ALIVE = [1, 6]
+      I_AM_ALIVE    = [1, 7]
+      UKNOWN        = [10, 10]
 
       property information : NodeInformation
       property table : NodeTable
@@ -29,14 +29,14 @@ module Nautilus
         udp_messages = Array(UDPMessage).new
         begin
           if (PING <=> converted) == 0
-            m_information = NodeInformation.new(message+2, address)
+            m_information = NodeInformation.new(message + 2, address)
             table.add_host(m_information)
             udp_messages.push(build_pong_message(m_information.ip))
           elsif (PONG <=> converted) == 0
-            m_information = NodeInformation.new(message+2, address)
+            m_information = NodeInformation.new(message + 2, address)
             table.add_host(m_information)
           elsif (NEIGHBOURS <=> converted) == 0
-            valid, remote_id = neighbours_message(message+2)
+            valid, remote_id = neighbours_message(message + 2)
             if valid
               neighbours = table.neighbours
               neighbours.each do |neighbour|
@@ -45,7 +45,7 @@ module Nautilus
               end
             end
           elsif (NEIGHBOUR <=> converted) == 0
-            valid, neighbour = neighbour_message(message+2)
+            valid, neighbour = neighbour_message(message + 2)
             if valid
               table.add_unresolved(neighbour)
             else
@@ -67,18 +67,18 @@ module Nautilus
         remote_information = table.find(remote_id)
         pub_key = Sodium::CryptoBox::PublicKey.new bytes: remote_information.not_nil!.public_key
         crypt_id = String.new(slice: pub_key.encrypt(information.id))
-        neighbour = String.new(slice:pub_key.encrypt(neighbour_information.ip.to_s))
+        neighbour = String.new(slice: pub_key.encrypt(neighbour_information.ip.to_s))
         signature = Nautilus::Utils::BytesToolBox.build_unknown_message_length_bytes(signing.sign_detached(neighbour + crypt_id))
         head = Nautilus::Utils::BytesToolBox.convert_array_to_bytes(NEIGHBOUR)
 
-        crypt_bytes  = Nautilus::Utils::BytesToolBox.build_unknown_message_length_bytes(crypt_id)
+        crypt_bytes = Nautilus::Utils::BytesToolBox.build_unknown_message_length_bytes(crypt_id)
         neighbour = Nautilus::Utils::BytesToolBox.build_unknown_message_length_bytes(neighbour)
         payload = Nautilus::Utils::BytesToolBox.concat(crypt_bytes, neighbour)
         payload = Nautilus::Utils::BytesToolBox.concat(payload, signature)
         UDPMessage.new(Nautilus::Utils::BytesToolBox.concat(head, payload),
-                      remote_information.not_nil!.ip,
-                      remote_information.not_nil!.id,
-                      "NEIGHBOUR MESSAGE")
+          remote_information.not_nil!.ip,
+          remote_information.not_nil!.id,
+          "NEIGHBOUR MESSAGE")
       end
 
       def neighbour_message(bytes : Bytes)
@@ -109,9 +109,9 @@ module Nautilus
         head = Nautilus::Utils::BytesToolBox.convert_array_to_bytes(NEIGHBOURS)
         payload = Nautilus::Utils::BytesToolBox.concat(Nautilus::Utils::BytesToolBox.build_unknown_message_length_bytes(crypt), signature)
         UDPMessage.new(Nautilus::Utils::BytesToolBox.concat(head, payload),
-                      node_information.ip,
-                      node_information.id,
-                      "NEIGHBOURS_MESSAGE")
+          node_information.ip,
+          node_information.id,
+          "NEIGHBOURS_MESSAGE")
       end
 
       def neighbours_message(bytes : Bytes)
@@ -139,10 +139,10 @@ module Nautilus
 
       def build_ping_message(target : Socket::IPAddress)
         UDPMessage.new(Nautilus::Utils::BytesToolBox.concat(
-                Nautilus::Utils::BytesToolBox.convert_array_to_bytes(PING),
-                information.node_message.to_slice), target,
-                "NO_ID",
-                "PING MESSAGE")
+          Nautilus::Utils::BytesToolBox.convert_array_to_bytes(PING),
+          information.node_message.to_slice), target,
+          "NO_ID",
+          "PING MESSAGE")
       end
 
       def build_pong_message(node : String)
@@ -157,7 +157,6 @@ module Nautilus
           "NO_ID",
           "PONG_MESSAGE")
       end
-
     end
   end
 end

@@ -1,7 +1,6 @@
 module Nautilus
   module Central
     class Combat
-
       def initialize
         @channel = Channel(Nautilus::Central::Message).new
       end
@@ -25,13 +24,11 @@ module Nautilus
         end
       end
 
-
       def handle(message : Nautilus::Central::Message)
         if message.type == Nautilus::Central::Message::LOG
           puts message.message
         end
       end
-
     end
   end
 end

@@ -13,12 +13,12 @@ module Nautilus
       property channel : Channel(Nautilus::Central::Message)
       property port : UInt32
 
-      def initialize(channel : Channel(Nautilus::Central::Message),  port : UInt32)
+      def initialize(channel : Channel(Nautilus::Central::Message), port : UInt32)
         @signing = Sodium::Sign::SecretKey.new
         @key = Sodium::CryptoBox::SecretKey.new
         @nodes = Hash(UInt32, NodeInformation).new
         @port = port
-        @information =  NodeInformation.new(Nautilus::Network::FORK, Nautilus::Network::VERSION, key.public_key.to_slice, signing.public_key.to_slice, @signing, port )
+        @information = NodeInformation.new(Nautilus::Network::FORK, Nautilus::Network::VERSION, key.public_key.to_slice, signing.public_key.to_slice, @signing, port)
         @channel = channel
         message = Nautilus::Central::Message.new(Nautilus::Central::Message::LOG, "Node: #{id.to_s} started")
         channel.send(message)
@@ -47,7 +47,7 @@ module Nautilus
           begin
             if node_table.unresovled_nodes.size > 0
               node_table.unresovled_nodes.each do |node|
-                ip = Socket::IPAddress.new(node.split(":")[0].not_nil!,node.split(":")[1].not_nil!.to_i  )
+                ip = Socket::IPAddress.new(node.split(":")[0].not_nil!, node.split(":")[1].not_nil!.to_i)
                 client_message = protocol.build_ping_message(ip)
                 udp_client_messages.send(client_message)
               end
@@ -65,7 +65,7 @@ module Nautilus
 
         Schedule.every(5.seconds) do
           node_table.all_neighbours_for(information.id).each do |neighbour|
-            client_message =  protocol.build_alive_message(neighbour)
+            client_message = protocol.build_alive_message(neighbour)
             udp_client_messages.send(client_message)
           end
         end
@@ -117,11 +117,9 @@ module Nautilus
         end
 
         post "/hosts" do |context, params|
-
           context
         end
       end
-
     end
   end
 end

@@ -10,6 +10,9 @@ require "json"
 require "http/client"
 require "socket"
 require "schedule"
+require "system/user"
+require "file_utils"
+
 
 module Nautilus
   VERSION = "0.1.0"
@@ -29,34 +32,24 @@ end
 # puts address.to_address
 #
 # puts [1, 5, 6].shuffle(Random::ISAAC.new(seeds: [1]))
-
-port = UInt32.new(8585)
-identifier : String = "Nautilus Node"
-extra : String  = "Network node to support the network"
-network  : String = "main"
-
-OptionParser.parse! do |parser|
-  parser.banner = "Usage: salute [arguments]"
-  parser.on("-port PORT", "--port=PORT", "Runs the node on specific port") { |_port| port = UInt32.new(_port.to_i) }
-  parser.on("-identifier IDENTIFIER", "--identifier=IDENTIFIER", "Give your node a custom identifier") { |_identifier| identifier = _identifier }
-  parser.on("-extra EXTRA", "--extra=EXTRA", "Short description about the node") { |_extra| extra = _extra }
-  parser.on("-network NETWORK", "--network=NETWORK", "Select which node network you want to run") { |_network| network = _network }
+network = "main"
+genesis = false
+OptionParser.parse do |parser|
+  parser.on("-n NETWORK", "--network=NETWORK", "Select the network") { |_network| network = _network }
+  parser.on("-g", "--enable_genesis", "This node will be the genesis validattor") { genesis = true }
 end
 
-nodes = Array(String).new
-if network == "main"
-  nodes = Nautilus::Network::Configuration::Main.new.nodes
-elsif network == "development"
-  nodes = Nautilus::Network::Configuration::Development.new.nodes
+
+if network == "development"
+  conf = Nautilus::Network::Configuration::Development.new(genesis)
+else
+  conf = Nautilus::Network::Configuration::Main.new(genesis)
 end
 
 combat = Nautilus::Central::Combat.new
-spawn do
-  Nautilus::Network::Node.new( combat.channel, port ).run( nodes)
-end
-
-s = Sodium::Sign::SecretKey.new
-x = Sodium::Sign::SecretKey.new(bytes: s.to_slice)
+# spawn do
+#   Nautilus::Network::Node.new(combat.channel, port).run(nodes)
+# end
 # test_text = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 # sign_key = Sodium::Sign::SecretKey.new
 # puts sign_key.public_key.to_slice.size

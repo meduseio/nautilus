@@ -5,7 +5,7 @@ module Nautilus
     class NodeInformation
       property version : UInt8
       property network_fork : UInt8
-      property public_signature  : Bytes
+      property public_signature : Bytes
       property public_key : Bytes
       property ip : Socket::IPAddress
       property signature : Bytes
@@ -40,7 +40,7 @@ module Nautilus
 
       def node_message
         head = Bytes.new(2)
-        head[0] = network_fork;
+        head[0] = network_fork
         head[1] = version
         public_key_bytes = Nautilus::Utils::BytesToolBox.build_unknown_message_length_bytes(String.new(slice: public_key))
         public_signature_bytes = Nautilus::Utils::BytesToolBox.build_unknown_message_length_bytes(String.new(slice: public_signature))
@@ -62,10 +62,10 @@ module Nautilus
       private def concat(a : Bytes, b : Bytes)
         result = IO::Memory.new a.bytesize + b.bytesize
         a.each do |v|
-            result.write_bytes UInt8.new v
+          result.write_bytes UInt8.new v
         end
         b.each do |v|
-            result.write_bytes UInt8.new v
+          result.write_bytes UInt8.new v
         end
         result.to_slice
       end

@@ -1,7 +1,6 @@
 module Nautilus
   module Network
     class Distance
-
       property point_a : Array(UInt8)
 
       def initialize(hash : String)
@@ -18,10 +17,9 @@ module Nautilus
 
       private def byte_distance(point_b : Array(UInt8))
         distance_array = Array(UInt32).new
-        point_a.each_with_index { |x,i| distance_array.push(x.to_u ^ point_b[i].to_u) }
-        distance_array.reduce{ |acc, i| acc + i }
+        point_a.each_with_index { |x, i| distance_array.push(x.to_u ^ point_b[i].to_u) }
+        distance_array.reduce { |acc, i| acc + i }
       end
-
     end
   end
 end
