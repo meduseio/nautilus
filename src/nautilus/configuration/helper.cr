@@ -1,7 +1,6 @@
 module Nautilus
   module Configuration
     class Helper
-
       property network : String
       property nodes : Array(String)
       property is_validator : Bool
@@ -40,7 +39,7 @@ module Nautilus
       end
 
       def parse_config_option(parser)
-          parser.on("-c CONFIG_FILE", "--config=CONFIG_FILE", "Select the network") { |_config| @config_file = _config.to_s }
+        parser.on("-c CONFIG_FILE", "--config=CONFIG_FILE", "Select the network") { |_config| @config_file = _config.to_s }
       end
 
       def parse_network_option(parser)
@@ -50,7 +49,6 @@ module Nautilus
       def parse_new_genesis(parser)
         parser.on("-g", "--enable_genesis", "This node will be the genesis validattor") { @new_genesis = true }
       end
-
     end
   end
 end

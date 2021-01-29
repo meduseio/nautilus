@@ -1,7 +1,6 @@
 module Nautilus
   module Cryptography
     class Manager
-
       property config : Nautilus::Configuration::Base
       property private_key : Sodium::CryptoBox::SecretKey
       property private_signature : Sodium::Sign::SecretKey
@@ -50,7 +49,6 @@ module Nautilus
       def public_signature
         @private_signature.public_key
       end
-
     end
   end
 end

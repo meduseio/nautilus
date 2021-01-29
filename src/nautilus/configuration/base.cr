@@ -17,7 +17,7 @@ module Nautilus
       property is_validator : Bool
 
       def self.load
-        helper = Helper.new()
+        helper = Helper.new
         if helper.network == "development"
           Development.new(helper)
         else

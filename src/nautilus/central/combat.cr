@@ -1,7 +1,6 @@
 module Nautilus
   module Central
     class Combat
-
       property config : Nautilus::Configuration::Base
 
       def initialize(config : Nautilus::Configuration::Base)
