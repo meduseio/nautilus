@@ -37,6 +37,7 @@ module Nautilus
           puts message.message
         elsif message.type == Nautilus::Central::Message::GENESIS_BLOCK
           puts message.message
+          chain.build_genesis
         end
       end
     end

@@ -1,6 +1,9 @@
 # This is reference implementation of the Nautilus Blockchain Network
 require "./nautilus/*"
 require "./nautilus/central/*"
+require "db"
+require "db/database"
+require "sqlite3"
 require "sodium"
 require "base64"
 require "openssl"
@@ -13,7 +16,6 @@ require "schedule"
 require "system/user"
 require "file_utils"
 require "levenshtein"
-require "sqlite3"
 
 module Nautilus
   VERSION = "0.1.0"

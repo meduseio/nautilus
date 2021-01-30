@@ -3,10 +3,18 @@ require "./transaction"
 module Nautilus
   module Blockchain
     class Block
-      def self.genesis(genesis_cypher : String, initial_deposit : Nautilus::Blockchain::Transaction, validator_depoist_transaction : Nautilus::Blockchain::Transaction, become_validator_transaction : Nautilus::Blockchain::Transaction)
-        tx = [initial_deposit, validator_depoist_transaction, become_validator_transaction]
-        Block.new(previous: nil, tx: tx)
+
+      property transactions : Array(Nautilus::Blockchain::Transaction)
+
+      def initialize
+        @transactions = Array(Nautilus::Blockchain::Transaction).new
       end
+
+      def add_transaction(transaction : Nautilus::Blockchain::Transaction)
+        @transactions.push(transaction)
+      end
+
+      
     end
   end
 end
