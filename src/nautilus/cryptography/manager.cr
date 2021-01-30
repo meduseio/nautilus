@@ -18,6 +18,16 @@ module Nautilus
                                Digest::SHA1.hexdigest(sign.public_key.to_slice))
       end
 
+      def self.build_public_signature_hexstring_from_private_key(signature_key : String)
+        sign = Manager.build_private_signature(signature_key)
+        sign.public_key.to_slice.hexstring
+      end
+
+      def self.build_public_signature_from_hexstring(signature_hexstring : String) : String
+        bytes = Nautilus::Utils::BytesToolBox.convert_hex_string_to_bytes(signature_hexstring)
+        bytes.hexdigest
+      end
+
       def self.build_private_key(key) : Sodium::CryptoBox::SecretKey
         s = Nautilus::Utils::BytesToolBox.convert_hex_string_to_bytes(key)
         Sodium::CryptoBox::SecretKey.new(bytes: s.to_slice)

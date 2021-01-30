@@ -11,7 +11,11 @@ dependencies:
     github: tbrand/router.cr
   schedule:
     github: hugoabonizio/schedule.cr
+  sqlite3:
+    github: crystal-lang/crystal-sqlite3
 targets:
+  nautilus-cli:
+    main: src/cli.cr
   nautilus:
     main: src/nautilus.cr
 

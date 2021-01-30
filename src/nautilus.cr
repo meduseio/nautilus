@@ -13,6 +13,7 @@ require "schedule"
 require "system/user"
 require "file_utils"
 require "levenshtein"
+require "sqlite3"
 
 module Nautilus
   VERSION = "0.1.0"

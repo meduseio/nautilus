@@ -2,9 +2,11 @@ module Nautilus
   module Central
     class Combat
       property config : Nautilus::Configuration::Base
+      property chain : Nautilus::Blockchain::Chain
 
       def initialize(config : Nautilus::Configuration::Base)
         @config = config
+        @chain = Nautilus::Blockchain::Chain.new(config)
         @channel = Channel(Nautilus::Central::Message).new
       end
 
@@ -32,6 +34,8 @@ module Nautilus
 
       def handle(message : Nautilus::Central::Message)
         if message.type == Nautilus::Central::Message::LOG
+          puts message.message
+        elsif message.type == Nautilus::Central::Message::GENESIS_BLOCK
           puts message.message
         end
       end

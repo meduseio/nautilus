@@ -13,6 +13,9 @@ module Nautilus
       property max_number_of_validators : Int32
       property number_of_blocks_in_generation : Int32
       property genesis_validator : String
+      property genesis_signature : String
+      property genesis_staking_account : String
+      property genesis_rewards_account : String
       property working_direcotry : String
       property is_validator : Bool
 
@@ -38,6 +41,9 @@ module Nautilus
         max_number_of_validators : Int32,
         number_of_blocks_in_generation : Int32,
         genesis_validator : String,
+        genesis_signature : String,
+        genesis_staking_account : String,
+        genesis_rewards_account : String,
         working_direcotry : String,
         is_validator : Bool,
         config_file : String
@@ -54,6 +60,9 @@ module Nautilus
         @max_number_of_validators = max_number_of_validators
         @number_of_blocks_in_generation = number_of_blocks_in_generation
         @genesis_validator = genesis_validator
+        @genesis_signature = genesis_signature
+        @genesis_staking_account = genesis_staking_account
+        @genesis_rewards_account = genesis_rewards_account
         @working_direcotry = working_direcotry
         @is_validator = is_validator
         @config_file = config_file
@@ -81,7 +90,11 @@ module Nautilus
         @neighbour_size = values["neighbour_size"].as_i
         @max_number_of_validators = values["max_number_of_validators"].as_i
         @number_of_blocks_in_generation = values["number_of_blocks_in_generation"].as_i
-        @genesis_validator = values["number_of_blocks_in_generation"].to_s
+        @genesis_validator = values["genesis_validator"].to_s
+        @genesis_signature = values["genesis_signature"].to_s
+        @genesis_staking_account = values["genesis_staking_account"].to_s
+        @genesis_rewards_account = values["genesis_rewards_account"].to_s
+
         @working_direcotry = values["working_direcotry"].to_s
         @is_validator = values["is_validator"].as_bool
       end
@@ -132,6 +145,9 @@ module Nautilus
             json.field "max_number_of_validators", max_number_of_validators
             json.field "number_of_blocks_in_generation", number_of_blocks_in_generation
             json.field "genesis_validator", genesis_validator
+            json.field "genesis_signature", genesis_signature
+            json.field "genesis_staking_account", genesis_staking_account
+            json.field "genesis_rewards_account", genesis_rewards_account
             json.field "working_direcotry", working_direcotry
             json.field "is_validator", is_validator
           end

@@ -43,6 +43,15 @@ module Nautilus
           begin
             NodeLogicHelper.ping_to_unresolved(node_table, protocol, udp_client_messages)
             NodeLogicHelper.find_neighbours(node_table, protocol, udp_client_messages)
+            if config.is_validator
+              if node_table.neighbours.size == 0 &&
+                 node_table.unresovled_nodes.size &&
+                 config.genesis_validator == information.id &&
+                 config.genesis_signature == information.public_signature.hexstring
+                Nautilus::Central::Message.new(Nautilus::Central::Message::LOG, "CREATE GENESIS BLOCK")
+                channel.send(message)
+              end
+            end
           rescue ex
             p ex.inspect
           end

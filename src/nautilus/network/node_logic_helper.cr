@@ -19,6 +19,9 @@ module Nautilus
           end
         end
       end
+
+      def self.check_for_block(node_table : NodeTable, blockchain : Nautilus::Blockchain::Chain, is_validator : Bool)
+      end
     end
   end
 end
