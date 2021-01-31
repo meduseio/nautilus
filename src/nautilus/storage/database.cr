@@ -9,13 +9,13 @@ module Nautilus
         InitHelper.new(@db)
       end
 
-      def current_blocksize
+      def current_blocksize() : Int32
+        blocksize : Int32 = 0
         rs = db.query "SELECT COUNT(*) FROM block;"
-        @current_blocksize = 0
         rs.each do
-          @current_blocksize = rs.read(Int32);
+          blocksize = rs.read(Int32);
         end
-        @current_blocksize
+        blocksize
       end
     end
   end

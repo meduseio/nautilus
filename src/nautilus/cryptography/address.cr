@@ -6,7 +6,7 @@ module Nautilus
       def initialize(pub_key : String)
         @key = Sodium::Sign::PublicKey.new bytes: pub_key.to_slice
         address = Digest::SHA1.hexdigest(Digest::SHA1.hexdigest(pub_key) + Digest::SHA1.hexdigest(pub_key)).to_s
-        @address = "N0x" + address
+        @address = "Nx" + address
       end
 
       def is_valid?(message, signature)
