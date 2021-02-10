@@ -1,6 +1,7 @@
 # nautilus
 
-This is the crystal lang implementation of the Nautilus Blockchain Protocol.
+This is the crystal lang implementation of the Nautilus Blockchain Protocol. 
+Its still in development : **[Read the Protocol Documentation.](https://github.com/MeduseIO/nautilus/blob/master/doc/protocol.md)**
 
 ## Installation
 Dependencies:
