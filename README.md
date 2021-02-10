@@ -1,18 +1,38 @@
 # nautilus
 
-A Blockchain written in crystal-lang.
+This is the crystal lang implementation of the Nautilus Blockchain Protocol.
 
 ## Installation
+Dependencies:
+**[Crystal lang.](https://github.com/crystal-lang/crystal)**
 
-TODO: Write installation instructions here
+cd to the repository folder and run:
+
+```zsh
+shards build
+```
+
+All Binaries are in the bin folder of this repository.
 
 ## Usage
 
-TODO: Write usage instructions here
+Currently only development Network is implemented. Run first Node:
 
-## Development
+```zsh
+bin/nautilus --network=development
+```
 
-TODO: Write development instructions here
+The Genesis Node, need to be setup first, its not possible build the first block without the genesis node.
+
+## TODO
+
+- Command Line Tool for creating and managing Accounts
+- Command Line Tool for access to the node through RPC.
+- Setup procedure for Genesis Node (Required for development mode)
+- Enable Validation Model
+- Add EVM to be binary compatible with Ethereum.
+- Add Clients for other Network Protocols for Validation
+- Write more Documentation
 
 ## Contributing
 

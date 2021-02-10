@@ -12,27 +12,6 @@ module Nautilus
       property base_fee_cap : String
       property validator_tip : String
 
-      def self.build_reward(account : String, amount : String, signature_key : String)
-        sign_key = Nautilus::Cryptography::Manager.build_private_signature(signature_key)
-        reward_source = Nautilus::Cryptography::Address.new(signature_key)
-        t = Transaction.new(reward_source.to_address,
-                            Nautilus::Cryptography::Manager.build_public_signature_hexstring_from_private_key(signature_key),
-                            account,
-                            amount,
-                            "0x",
-                            reward_source.to_address,
-                            Nautilus::Cryptography::Manager.build_public_signature_hexstring_from_private_key(signature_key),
-                            "0x",
-                            "0x")
-        main_hash = t.build_main_transaction
-        transaction_signature = String.new(slice: sign_key.sign_detached(main_hash))
-        t.set_transaction_signature(transaction_signature)
-        fee_hash = t.build_fee_transaction
-        fee_signature = String.new(slice: sign_key.sign_detached(main_hash))
-        t.set_fee_signature(fee_signature)
-        t
-      end
-
       def initialize(source : String,
                      source_pub_signature : String,
                      target : String,
@@ -87,7 +66,7 @@ module Nautilus
         is_valid_signature?(node_sign, build_fee_transaction, @fee_signature)
       end
 
-      private def valid?
+      private def is_valid_signature?
 
       end
 
