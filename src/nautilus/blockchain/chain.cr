@@ -18,17 +18,17 @@ module Nautilus
       end
 
       def build_genesis
-        if @blocksize == 0
-          block = Block.new()
-          intial = Transaction.build_reward(@config.genesis_staking_account,
-                                            MIN_STAKING,
-                                            @config.private_node_signature_key)
-          staking = Transaction.build_reward(@config.genesis_rewards_account,
-                                             MIN_STAKING,
-                                            @config.private_node_signature_key)
-          block.add_transaction(intial)
-          block.add_transaction(staking)
-        end
+        # if @blocksize == 0
+        #   block = Block.new()
+        #   intial = Transaction.build_reward(@config.genesis_staking_account,
+        #                                     MIN_STAKING,
+        #                                     @config.private_node_signature_key)
+        #   staking = Transaction.build_reward(@config.genesis_rewards_account,
+        #                                      MIN_STAKING,
+        #                                     @config.private_node_signature_key)
+        #   block.add_transaction(intial)
+        #   block.add_transaction(staking)
+        # end
       end
 
 
